@@ -1,0 +1,14 @@
+﻿1.1.1.	Select all categories’ names.
+	name(/*/*)
+
+1.1.2.	All products’ names.
+	name(/*/*/*)
+
+1.1.3.	All products with a price higher than given X.
+	/*/*/*[price>200.00]
+
+1.1.4.	All products with attribute “on sale” = “Y”.
+	/*/*/*[@on_sale='true']
+
+1.1.5.	The first product of each category.
+	/*/*/*[1]

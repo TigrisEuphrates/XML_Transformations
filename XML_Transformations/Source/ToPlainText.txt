@@ -1,0 +1,55 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+		CPUs
+			CPU
+				Intel Core i5 10400F
+				165.00
+			CPU
+				Intel Core i5 11400F
+				173.00
+			CPU
+				Intel Core i3 10100F
+				107.00
+			CPU
+				AMD Ryzen 5 3600
+				199.00
+			CPU
+				AMD Ryzen 5 2600
+				246.37
+			CPU
+				AMD Ryzen 7 4700G
+				239.99
+		GCards
+			Graphics_Card
+				ASUS NVIDIA GeForce GTX 1660 Ti TUF EVO Overclocked
+				229.99
+			Graphics_Card
+				MSI NVIDIA GeForce GTX 1650 Ventus XS Overclocked
+				220.99
+			Graphics_Card
+				Gigabyte NVIDIA GeForce RTX 3060 Ti EAGLE Overclocked
+				449.99
+			Graphics_Card
+				Visiontek AMD Radeon RX 560
+				199.99
+			Graphics_Card
+				Sapphire Technology AMD Radeon RX 5700 XT Nitro Plus
+				338.39
+			Graphics_Card
+				ASUS AMD Radeon RX 6500 XT Dual Overclocked
+				229.99
+		SSDs
+			SSD
+				Samsung 970 EVO Plus SSD 2TB M.2 NVMe
+				189.99
+			SSD
+				Samsung 980 Pro SSD 1TB M.2 NVMe
+				129.99
+			SSD
+				Inland Professional 512GB SSD
+				24.99
+			SSD
+				Seagate IronWolf 125 4TB SSD
+				579.99
+			SSD
+				WD Black SN850X 1TB NVMe M.2
+				119.99
