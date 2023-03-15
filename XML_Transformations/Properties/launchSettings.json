@@ -1,7 +1,8 @@
 {
   "profiles": {
     "XML_Transformations": {
-      "commandName": "Project"
+      "commandName": "Project",
+      "commandLineArgs": "sss sss"
     }
   }
 }

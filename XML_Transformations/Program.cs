@@ -27,7 +27,7 @@ public class Program
         }
         if (args.Length==1)
         {
-            xpathOutput(args[0], xmlDoc);
+            xpathWriteToText(args[0], xmlDoc);
         }
         if (args.Length > 1)
         {
@@ -35,11 +35,11 @@ public class Program
             string? firstArg = Console.ReadLine();
             if (firstArg == null||firstArg=="")
             {
-                xpathOutput(defaultDir, xmlDoc);
+                xpathWriteToText(defaultDir, xmlDoc);
             }
             else
-            { 
-                xpathOutput(firstArg, xmlDoc);
+            {
+                xpathWriteToText(firstArg, xmlDoc);
             }
         }
 
