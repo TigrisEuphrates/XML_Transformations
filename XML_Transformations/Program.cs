@@ -8,6 +8,7 @@ using System.Text;
 using System.Reflection.PortableExecutable;
 using System.Xml.Xsl;
 using System.Xml.XPath;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace XML_Transformations;
 public class Program
@@ -15,17 +16,14 @@ public class Program
     static string CurrentDirectory = AppDomain.CurrentDomain.BaseDirectory;
     public static void Main(string[] args)
     {
-        ////ValidateXSD("hardware.xml", "hardware.xsd");
-        ////TransformXML("hardware.xml", "ToHTML_Table.xslt", "html");
-        ////TransformXML("hardware.xml", "ToPlainText.xslt", "txt");
         XmlDocument xmlDoc = new XmlDocument();
         xmlDoc.Load($"{CurrentDirectory}\\..\\..\\..\\..\\Source\\hardware.xml");
         xmlDoc.PreserveWhitespace = true;
+        string defaultDir = $"{CurrentDirectory}\\..\\..\\..\\Source\\XPaths2.txt";
 
         if (args.Length==0)
         {
-            //produce textfile with resulting data.
-            xpathOutput("/*/*/*[1]", xmlDoc);
+            xpathWriteToText(defaultDir, xmlDoc);
         }
         if (args.Length==1)
         {
@@ -37,9 +35,9 @@ public class Program
             string? firstArg = Console.ReadLine();
             if (firstArg == null||firstArg=="")
             {
-                xpathOutput("/*/*/*[1]", xmlDoc);
+                xpathOutput(defaultDir, xmlDoc);
             }
-            else 
+            else
             { 
                 xpathOutput(firstArg, xmlDoc);
             }
@@ -47,11 +45,97 @@ public class Program
 
     }
 
+    public static void xpathWriteToText(string textDir, XmlDocument doc)
+    {
+        using (var reader = new StreamReader(textDir))
+        {
+            
+            while(!reader.EndOfStream)
+            {
+                string? xpath = reader.ReadLine();
+                string? txtName = xpath;
+
+                if (txtName != null)
+                {
+                    txtName = txtName.Replace('<', '_');
+                    txtName = txtName.Replace('>', '_');
+                    txtName = txtName.Replace(':', '_');
+                    txtName = txtName.Replace('"', '_');
+                    txtName = txtName.Replace('/', '_');
+                    txtName = txtName.Replace('\\', '_');
+                    txtName = txtName.Replace('|', '_');
+                    txtName = txtName.Replace('?', '_');
+                    txtName = txtName.Replace('*', '_');
+                }
+                using (FileStream fs = File.Create($"{CurrentDirectory}\\{txtName}.txt"))
+                {
+                    Console.WriteLine("Created TXT file: " + txtName);
+                    fs.Close();
+                }
+                using (var writer = new StreamWriter($"{CurrentDirectory}\\{txtName}.txt"))
+                {
+                    string result = xpathGetResult(xpath, doc);
+                    writer.WriteLine(result);
+                    Console.WriteLine("Applied XPaths to an XML file and wrote to file: "+ txtName);
+                    writer.Close();
+                }
+            }
+            reader.Close();
+        }
+    }
+
+    public static string xpathGetResult(string? xpath, XmlDocument doc)
+    {
+        if (xpath is null)
+        {
+            return "null";
+        }
+        if (doc.DocumentElement is not null)
+        {
+            XmlNodeList? nodes = doc.DocumentElement.SelectNodes(xpath);
+
+            if (nodes is not null)
+            {
+                if (nodes.Count != 0)
+                {
+                    string? result = null;
+                    foreach (XmlNode node in nodes)
+                    {
+                        if (node.NodeType == XmlNodeType.Element)
+                        {
+                            if (node.Name=="Name"||node.Name=="name")
+                            {
+                                result += (node.Name + " = " + node.InnerText + "\n");
+                            }
+                            else if(node.FirstChild?.Name=="Name"||node.FirstChild?.Name == "name")
+                            {
+                                result += (node.Name + " = " + node.FirstChild?.InnerText + "\n"); 
+                            }
+                            else
+                                result += (node.Name + "\n");
+                        }
+                        else { }
+                    }
+                    if (result is not null)
+                    {
+                        return result;
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("No object found or XPath written incorrect.");
+                    return "null";
+                }
+            }
+            return "null";
+        }
+        return "null";
+    }
+
+
 
     public static void xpathOutput(string xpath, XmlDocument doc)
     {
-       // XmlDocument doc = new XmlDocument();
-       // doc.PreserveWhitespace = true;
         if (doc.DocumentElement is not null)
         {
             XmlNodeList? nodes = doc.DocumentElement.SelectNodes(xpath);
@@ -72,12 +156,6 @@ public class Program
                 }
             }
         }
-
-
-
-
-
-
     }
 
 

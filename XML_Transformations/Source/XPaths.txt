@@ -1,8 +1,8 @@
 ﻿1.1.1.	Select all categories’ names.
-	name(/*/*)
+	/*/*
 
 1.1.2.	All products’ names.
-	name(/*/*/*)
+	/*/*/*/name
 
 1.1.3.	All products with a price higher than given X.
 	/*/*/*[price>200.00]
