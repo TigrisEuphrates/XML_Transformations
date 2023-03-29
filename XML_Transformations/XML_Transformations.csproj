@@ -7,4 +7,9 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Include="bin\Debug\net7.0\Source\Task_3_4\ToHTML_List.xslt" />
+    <None Include="bin\Debug\net7.0\Source\Task_3_4\ToHTML_TXT.xslt" />
+  </ItemGroup>
+
 </Project>
