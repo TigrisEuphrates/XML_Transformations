@@ -12,39 +12,30 @@ using System.Xml.XPath;
 namespace XML_Transformations;
 public class Program
 {
-    static string CurrentDirectory = AppDomain.CurrentDomain.BaseDirectory;
+#nullable enable
+    static readonly string CurrentDirectory = AppDomain.CurrentDomain.BaseDirectory;
+    static  string defaultDir = $"{CurrentDirectory}\\Source\\Task_1_2\\XPaths2.txt";
+    static readonly XmlDocument xmlDoc = new();
     public static void Main(string[] args)
     {
-        ////ValidateXSD("hardware.xml", "hardware.xsd");
-        ////TransformXML("hardware.xml", "ToHTML_Table.xslt", "html");
-        ////TransformXML("hardware.xml", "ToPlainText.xslt", "txt");
-        XmlDocument xmlDoc = new XmlDocument();
-        xmlDoc.Load($"{CurrentDirectory}\\..\\..\\..\\..\\Source\\hardware.xml");
+        xmlDoc.Load($"{CurrentDirectory}\\Source\\Task_1_2\\hardware.xml");
         xmlDoc.PreserveWhitespace = true;
 
-        if (args.Length==0)
-        {
-            //produce textfile with resulting data.
-            xpathOutput("/*/*/*[1]", xmlDoc);
-        }
-        if (args.Length==1)
-        {
-            xpathOutput(args[0], xmlDoc);
-        }
-        if (args.Length > 1)
-        {
-            Console.Write("App accepts only 0 or 1 arguments.\nEnter first argument (if none entered, default will execute): ");
-            string? firstArg = Console.ReadLine();
-            if (firstArg == null||firstArg=="")
-            {
-                xpathOutput("/*/*/*[1]", xmlDoc);
-            }
-            else 
-            { 
-                xpathOutput(firstArg, xmlDoc);
-            }
-        }
+        ValidateDTD("hardware.xml");
+        ValidateXSD("hardware.xml","hardware.xsd");
 
+
+        TransformXML("Hardware.xml", "ToHTML_Table.xslt", "html");
+        TransformXML("Hardware.xml", "ToHTML_List.xslt", "html");
+        TransformXML("Hardware.xml", "ToHTML_TXT.xslt", "txt");
+    }
+
+
+    public static void xPathResultsToTxt()
+    {
+        
+            xpathWriteToText(defaultDir, xmlDoc);
+        
     }
 
 
@@ -87,19 +78,31 @@ public class Program
         string txtName = xsltString.Remove(xsltString.Length - 5, 5);
         txtName = txtName.Insert(txtName.Length, "." + format);
 
-        StreamWriter sW = System.IO.File.CreateText($"..\\..\\..\\Source\\{txtName}");
+        StreamWriter sW = System.IO.File.CreateText($"{CurrentDirectory}\\Source\\Created_files\\{txtName}");
         sW.Close();
         Console.WriteLine($"Created File {txtName}");
+        //XslCompiledTransform XSLTrans = new XslCompiledTransform();
+        //XSLTrans.Load($"{CurrentDirectory}\\Source\\Task_3_4\\{xsltString}");
+        //XmlTextWriter myWriter = new XmlTextWriter($"{CurrentDirectory}\\Source\\Created_files\\{txtName}", null);
+        //XSLTrans.Transform($"{CurrentDirectory}\\Source\\Task_1_2\\{inputXml}", null, myWriter);
 
 
-        XslCompiledTransform transform = new XslCompiledTransform();
+        //using (XmlReader xsltReader = XmlReader.Create($"{CurrentDirectory}\\Source\\Task_3_4\\{xsltString}", new XmlReaderSettings() { DtdProcessing = DtdProcessing.Parse }))
+        //{
+        //    XslCompiledTransform XSLTrans = new XslCompiledTransform();
+        //    XSLTrans.Load(xsltReader);
+        //    XmlTextWriter myWriter = new XmlTextWriter($"{CurrentDirectory}\\Source\\Created_files\\{txtName}", null);
+        //    XSLTrans.Transform($"{CurrentDirectory}\\Source\\Task_1_2\\{inputXml}", null, myWriter);
+        //}
 
+        using (XmlReader xmlReader = XmlReader.Create($"{CurrentDirectory}\\Source\\Task_1_2\\{inputXml}", new XmlReaderSettings() { DtdProcessing = DtdProcessing.Parse }))
+        {
+            XslCompiledTransform XSLTrans = new XslCompiledTransform();
+            XSLTrans.Load($"{CurrentDirectory}\\Source\\Task_3_4\\{xsltString}");
+            XmlTextWriter myWriter = new XmlTextWriter($"{CurrentDirectory}\\Source\\Created_files\\{txtName}", null);
+            XSLTrans.Transform(xmlReader, null, myWriter);
+        }
 
-
-        transform.Load($"..\\..\\..\\Source\\{xsltString}");
-
-
-        transform.Transform($"..\\..\\..\\Source\\{inputXml}", $"..\\..\\..\\Source\\{txtName}");
     }
 
     public static async void printResult(XmlNodeList nodeList, string txtName, String tab = "", bool needRecursion = true)
@@ -155,10 +158,10 @@ public class Program
         XmlReader readerXSD = XmlReader.Create($"..\\..\\..\\Source\\{XMLName}", settings);
         while (readerXSD.Read()) ;
 
-        settings.ValidationType = ValidationType.DTD;
-        settings.XmlResolver= new XmlUrlResolver();
-        XmlReader readerDTD = XmlReader.Create($"..\\..\\..\\Source\\{XMLName}", settings);
-        while(readerDTD.Read()) ;
+        //settings.ValidationType = ValidationType.DTD;
+        //settings.XmlResolver= new XmlUrlResolver();
+        //XmlReader readerDTD = XmlReader.Create($"{CurrentDirectory}\\Source\\Task_1_2\\{XMLName}", settings);
+        //while(readerDTD.Read()) ;
     }
 
     static void XSDValidationCallBack(object? sender, ValidationEventArgs e)
